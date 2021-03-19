@@ -21,32 +21,33 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/ra9dev/PROJECTNAME/internal/ports/configs"
-	"github.com/ra9dev/PROJECTNAME/internal/ports/http"
-	"github.com/ra9dev/PROJECTNAME/pkg/log"
-	"github.com/ra9dev/PROJECTNAME/pkg/os"
+	"github.com/ra9dev/safe-and-sound/internal/configs"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/http"
+	"github.com/ra9dev/safe-and-sound/pkg/config"
+	"github.com/ra9dev/safe-and-sound/pkg/log"
+	"github.com/ra9dev/safe-and-sound/pkg/os"
 	stdlog "log"
 
-	"github.com/ra9dev/PROJECTNAME/internal/adapters/database"
-	"github.com/ra9dev/PROJECTNAME/internal/adapters/database/drivers"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/database"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/database/drivers"
 )
 
 var version = "unknown"
 
 func main() {
-	fmt.Printf("PROJECTNAME %s\n", version)
+	fmt.Printf("safe-and-sound %s\n", version)
 
 	appCtx, cancelAppCtx := context.WithCancel(context.Background())
 	defer cancelAppCtx()
 	go os.CatchTermination(cancelAppCtx)
 
-	config := configs.NewAppConfig()
-	log.Setup(config.LogMode)
+	appConfig := config.Parse(new(configs.DefaultConfig)).(*configs.DefaultConfig)
+	log.Setup(appConfig.LogMode)
 
 	ds := database.New(drivers.DataStoreConfig{
-		URL:  config.DataStoreURL,
-		Name: config.DataStoreName,
-		DB:   config.DataStoreDB,
+		URL:  appConfig.DataStoreURL,
+		Name: appConfig.DataStoreName,
+		DB:   appConfig.DataStoreDB,
 	})
 	if err := ds.Connect(); err != nil {
 		stdlog.Printf("[ERROR] cannot connect to datastore %s: %v", ds.Name(), err)
@@ -58,10 +59,10 @@ func main() {
 	httpSrv := http.NewServer(
 		appCtx,
 		http.WithVersion(version),
-		http.WithCustomAddress(config.ListenAddr),
-		http.WithSSL(config.CertFile, config.KeyFile),
-		http.WithFiles(config.FilesDir),
-		http.WithTestingMode(config.IsTesting),
+		http.WithCustomAddress(appConfig.ListenAddr),
+		http.WithSSL(appConfig.CertFile, appConfig.KeyFile),
+		http.WithFiles(appConfig.FilesDir),
+		http.WithTestingMode(appConfig.IsTesting),
 	)
 	if err := httpSrv.Run(); err != nil {
 		stdlog.Println(err)

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ra9dev/PROJECTNAME/internal/ports/http/resources"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/http/resources"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"

@@ -2,7 +2,7 @@ package resources
 
 import (
 	"github.com/go-chi/chi"
-	_ "github.com/ra9dev/PROJECTNAME/api"
+	_ "github.com/ra9dev/safe-and-sound/api"
 	"github.com/swaggo/http-swagger"
 	"path/filepath"
 )

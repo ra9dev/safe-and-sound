@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	"github.com/ra9dev/PROJECTNAME/internal/adapters/database/drivers"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/database/drivers"
 )
 
 type Database struct {

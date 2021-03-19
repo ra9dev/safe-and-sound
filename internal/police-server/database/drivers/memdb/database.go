@@ -3,7 +3,7 @@ package memdb
 import (
 	"context"
 	"github.com/hashicorp/go-memdb"
-	"github.com/ra9dev/PROJECTNAME/internal/adapters/database/drivers"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/database/drivers"
 )
 
 type Database struct {

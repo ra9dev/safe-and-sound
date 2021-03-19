@@ -1,4 +1,4 @@
-module github.com/ra9dev/PROJECTNAME
+module github.com/ra9dev/safe-and-sound
 
 go 1.16
 
