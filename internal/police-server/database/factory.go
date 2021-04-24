@@ -2,7 +2,6 @@ package database
 
 import (
 	"github.com/ra9dev/safe-and-sound/internal/police-server/database/drivers"
-	"github.com/ra9dev/safe-and-sound/internal/police-server/database/drivers/memdb"
 	"github.com/ra9dev/safe-and-sound/internal/police-server/database/drivers/mongo"
 )
 
@@ -11,6 +10,6 @@ func New(conf drivers.DataStoreConfig) drivers.DataStore {
 	case "mongo":
 		return mongo.New(conf)
 	default:
-		return memdb.New()
+		panic("no default db")
 	}
 }

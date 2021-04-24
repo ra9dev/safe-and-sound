@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/ra9dev/safe-and-sound/internal/configs"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/daemons"
 	"github.com/ra9dev/safe-and-sound/internal/police-server/http"
 	"github.com/ra9dev/safe-and-sound/pkg/config"
 	"github.com/ra9dev/safe-and-sound/pkg/log"
@@ -56,6 +57,9 @@ func main() {
 	stdlog.Printf("Connected to %s", ds.Name())
 	defer ds.Close(appCtx)
 
+	sensorsWatcher := daemons.NewSensorsWatcher(appCtx, []string{"http://localhost:8081"}, ds.Incidents())
+	go sensorsWatcher.Run()
+
 	httpSrv := http.NewServer(
 		appCtx,
 		http.WithVersion(version),
@@ -63,6 +67,7 @@ func main() {
 		http.WithSSL(appConfig.CertFile, appConfig.KeyFile),
 		http.WithFiles(appConfig.FilesDir),
 		http.WithTestingMode(appConfig.IsTesting),
+		http.WithDS(ds),
 	)
 	if err := httpSrv.Run(); err != nil {
 		stdlog.Println(err)

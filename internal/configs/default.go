@@ -18,3 +18,11 @@ type DefaultConfig struct {
 	LogMode   logutils.LogLevel `long:"log-mode" env:"LOG_MODE" description:"log mode" default:"WARN"`
 	IsTesting bool              `long:"testing" env:"APP_TESTING" description:"testing mode"`
 }
+
+type SensorConfig struct {
+	ID string `long:"sensor-id" env:"SENSOR_ID" description:"sensor id" default:"myID"`
+
+	ListenAddr string `short:"l" long:"listen" env:"LISTEN" description:"Listen Address (format: :8080|127.0.0.1:8080)" required:"false" default:":8080"`
+
+	LogMode logutils.LogLevel `long:"log-mode" env:"LOG_MODE" description:"log mode" default:"WARN"`
+}

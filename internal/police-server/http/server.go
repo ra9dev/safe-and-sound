@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ra9dev/safe-and-sound/internal/police-server/http/resources"
-
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/database/drivers"
+	"github.com/ra9dev/safe-and-sound/internal/police-server/http/resources"
 )
 
 const (
@@ -27,6 +27,8 @@ type Server struct {
 	FilesDir          http.Dir
 	CertFile, KeyFile *string
 	IsTesting         bool
+
+	ds drivers.DataStore
 
 	idleConnectionsCh chan struct{}
 	appCtx            context.Context
@@ -71,6 +73,8 @@ func (srv *Server) setupRouter() chi.Router {
 		r.Mount(filesRoute, resources.NewFilesResource(srv.FilesDir).Routes())
 		r.Mount("/swagger", resources.SwaggerResource{FilesPath: filesRoute}.Routes())
 	}
+
+	r.Mount("/incidents", resources.NewIncidentsResource(srv.ds.Incidents()).Routes())
 
 	return r
 }

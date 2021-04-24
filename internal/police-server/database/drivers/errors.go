@@ -2,4 +2,7 @@ package drivers
 
 import "errors"
 
-var ErrInvalidConfigStruct = errors.New("invalid config structure")
+var (
+	ErrEmptyStruct         = errors.New("empty structure")
+	ErrInvalidConfigStruct = errors.New("invalid config structure")
+)

@@ -14,14 +14,15 @@ import (
 )
 
 func main() {
-	appConfig := config.Parse(new(configs.DefaultConfig)).(*configs.DefaultConfig)
+	appConfig := config.Parse(new(configs.SensorConfig)).(*configs.SensorConfig)
 	log.Setup(appConfig.LogMode)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, map[string]interface{}{
-			"lvl": rand.Intn(100),
+			"id":         appConfig.ID,
+			"soundLevel": rand.Intn(100),
 		})
 	})
 

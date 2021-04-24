@@ -15,11 +15,11 @@ type Database struct {
 	connURL string
 	dbName  string
 
+	incidentsRepo drivers.IncidentsRepository
+
 	client *mongo.Client
 	db     *mongo.Database
 }
-
-func (d *Database) Name() string { return "Mongo" }
 
 func New(conf drivers.DataStoreConfig) drivers.DataStore {
 	return &Database{
@@ -27,6 +27,8 @@ func New(conf drivers.DataStoreConfig) drivers.DataStore {
 		dbName:  conf.DB,
 	}
 }
+
+func (d *Database) Name() string { return "Mongo" }
 
 func (d *Database) Connect() error {
 	if d.connURL == "" {
@@ -92,4 +94,12 @@ func (d *Database) indexExistsByName(ctx context.Context, collection *mongo.Coll
 	}
 
 	return false, nil
+}
+
+func (d *Database) Incidents() drivers.IncidentsRepository {
+	if d.incidentsRepo == nil {
+		d.incidentsRepo = NewIncidents(d.db.Collection("incidents"))
+	}
+
+	return d.incidentsRepo
 }
